@@ -14,11 +14,7 @@ else ()
     include_directories ($ENV{DXSDK_DIR}/Include)
 endif ()
 
-# Change this to point to a directory containing OpenCL header directory "CL"
-# OR copy OpenCL headers to ./inc/CL/
-if (NOT DEFINED OPENCL_INCLUDE_DIRS)
-    set (OPENCL_INCLUDE_DIRS ./inc)
-endif ()
+find_path(OPENCL_INCLUDE_DIRS CL/cl.h PATHS inc)
 
 include_directories (${OPENCL_INCLUDE_DIRS})
 
@@ -31,5 +27,13 @@ endif ()
 
 target_link_libraries (OpenCL ${CMAKE_DL_LIBS})
 
+install(TARGETS OpenCL DESTINATION 
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+)
+
+if(BUILD_TESTING)
 enable_testing()
 add_subdirectory (test)
+endif()
